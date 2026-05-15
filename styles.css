@@ -276,6 +276,36 @@ h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
   background: var(--gold-light) !important;
 }
 
+/* Mobile Give Button (always visible in nav on mobile) */
+.nav__give-mobile {
+  display: none;
+  padding: 0.5rem 1.35rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dark);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 12px rgba(212,162,76,0.35);
+  transition: all var(--transition);
+  animation: mobileGivePulse 3s ease-in-out infinite;
+}
+
+.nav__give-mobile:hover {
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--dark);
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(212,162,76,0.5);
+}
+
+@keyframes mobileGivePulse {
+  0%, 100% { box-shadow: 0 2px 12px rgba(212,162,76,0.35); }
+  50% { box-shadow: 0 2px 18px rgba(212,162,76,0.55); }
+}
+
 /* Mobile hamburger */
 .nav__toggle {
   display: none;
@@ -1443,6 +1473,8 @@ h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
 
   .nav__links { display: none; }
   .nav__toggle { display: flex; }
+  .nav__give-mobile { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .floating-give { display: none; }
 
   .nav__links.open {
     display: flex;
