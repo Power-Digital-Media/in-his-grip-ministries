@@ -195,4 +195,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* --- Dynamic Copyright Year --- */
+  const yearSpan = document.getElementById('currentYear');
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
+
+  /* --- Floating Give Button Scroll Fade-Out --- */
+  const floatingGive = document.getElementById('floatingGive');
+  const giveSection = document.getElementById('give');
+
+  if (floatingGive && giveSection && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          floatingGive.classList.add('hidden');
+        } else {
+          floatingGive.classList.remove('hidden');
+        }
+      });
+    }, {
+      threshold: 0.05
+    });
+    observer.observe(giveSection);
+  }
+
 });

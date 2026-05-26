@@ -1334,6 +1334,13 @@ h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
   box-shadow: 0 8px 30px rgba(212,162,76,0.5);
 }
 
+.floating-give.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.9);
+  pointer-events: none;
+}
+
 @keyframes floatPulse {
   0%, 100% { box-shadow: 0 4px 20px rgba(212,162,76,0.4); }
   50% { box-shadow: 0 4px 30px rgba(212,162,76,0.6); }
