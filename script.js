@@ -170,4 +170,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* --- Zelle Click to Copy --- */
+  const zelleCard = document.getElementById('zelleCard');
+  const zelleAction = document.getElementById('zelleAction');
+
+  if (zelleCard && zelleAction) {
+    zelleCard.addEventListener('click', () => {
+      const copyText = zelleCard.getAttribute('data-copy');
+      if (copyText) {
+        navigator.clipboard.writeText(copyText).then(() => {
+          zelleAction.innerHTML = '<span style="color: #B388FF; font-weight: 700;">✅ Copied to Clipboard!</span>';
+          zelleAction.style.letterSpacing = '0.5px';
+          zelleCard.style.borderColor = '#B388FF';
+          
+          setTimeout(() => {
+            zelleAction.innerHTML = 'Tap to Copy Number →';
+            zelleAction.style.letterSpacing = '';
+            zelleCard.style.borderColor = '';
+          }, 2500);
+        }).catch(err => {
+          console.error('Could not copy Zelle text: ', err);
+        });
+      }
+    });
+  }
+
 });
