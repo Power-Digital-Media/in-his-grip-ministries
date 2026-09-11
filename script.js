@@ -100,13 +100,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', highlightNav, { passive: true });
 
+  /* --- Hero Video Controls & Autoplay --- */
+  const heroVideo = document.getElementById('heroVideo');
+  const heroSoundToggle = document.getElementById('heroSoundToggle');
+  const heroPlayToggle = document.getElementById('heroPlayToggle');
+
+  if (heroVideo) {
+    // Attempt playback (safely catch low-power mode or browser policy blocks)
+    heroVideo.play().catch(() => {
+      // Browser prevented autoplay
+    });
+
+    // Sound toggle
+    if (heroSoundToggle) {
+      heroSoundToggle.addEventListener('click', () => {
+        heroVideo.muted = !heroVideo.muted;
+        const isMuted = heroVideo.muted;
+        const iconMuted = heroSoundToggle.querySelector('.icon-muted');
+        const iconUnmuted = heroSoundToggle.querySelector('.icon-unmuted');
+        const text = heroSoundToggle.querySelector('.hero__control-text');
+
+        if (iconMuted && iconUnmuted && text) {
+          iconMuted.style.display = isMuted ? '' : 'none';
+          iconUnmuted.style.display = isMuted ? 'none' : '';
+          text.textContent = isMuted ? 'Sound' : 'Mute';
+        }
+        heroSoundToggle.setAttribute('aria-label', isMuted ? 'Unmute video sound' : 'Mute video sound');
+      });
+    }
+
+    // Play/Pause toggle
+    if (heroPlayToggle) {
+      heroPlayToggle.addEventListener('click', () => {
+        if (heroVideo.paused) {
+          heroVideo.dataset.manuallyPaused = '';
+          delete heroVideo.dataset.manuallyPaused;
+          heroVideo.play();
+        } else {
+          heroVideo.dataset.manuallyPaused = 'true';
+          heroVideo.pause();
+        }
+      });
+
+      heroVideo.addEventListener('play', () => {
+        const iconPause = heroPlayToggle.querySelector('.icon-pause');
+        const iconPlay = heroPlayToggle.querySelector('.icon-play');
+        const text = heroPlayToggle.querySelector('.hero__control-text');
+        if (iconPause && iconPlay && text) {
+          iconPause.style.display = '';
+          iconPlay.style.display = 'none';
+          text.textContent = 'Pause';
+        }
+        heroPlayToggle.setAttribute('aria-label', 'Pause background video');
+      });
+
+      heroVideo.addEventListener('pause', () => {
+        const iconPause = heroPlayToggle.querySelector('.icon-pause');
+        const iconPlay = heroPlayToggle.querySelector('.icon-play');
+        const text = heroPlayToggle.querySelector('.hero__control-text');
+        if (iconPause && iconPlay && text) {
+          iconPause.style.display = 'none';
+          iconPlay.style.display = '';
+          text.textContent = 'Play';
+        }
+        heroPlayToggle.setAttribute('aria-label', 'Play background video');
+      });
+    }
+
+    // Pause video when scrolled out of view to save CPU/GPU resources
+    if ('IntersectionObserver' in window) {
+      const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (heroVideo.paused && heroVideo.dataset.manuallyPaused !== 'true') {
+              heroVideo.play().catch(() => {});
+            }
+          } else {
+            if (!heroVideo.paused) {
+              heroVideo.pause();
+            }
+          }
+        });
+      }, { threshold: 0.1 });
+
+      const heroSection = document.getElementById('hero');
+      if (heroSection) heroObserver.observe(heroSection);
+    }
+  }
+
   /* --- Parallax on hero background --- */
-  const heroBg = document.querySelector('.hero__bg img');
-  if (heroBg && window.innerWidth > 768) {
+  const heroBgMedia = document.querySelector('.hero__video') || document.querySelector('.hero__bg img');
+  if (heroBgMedia && window.innerWidth > 768) {
     window.addEventListener('scroll', () => {
       const scrolled = window.scrollY;
       if (scrolled < window.innerHeight) {
-        heroBg.style.transform = `translateY(${scrolled * 0.3}px) scale(1.05)`;
+        heroBgMedia.style.transform = `translateY(${scrolled * 0.25}px) scale(1.04)`;
       }
     }, { passive: true });
   }

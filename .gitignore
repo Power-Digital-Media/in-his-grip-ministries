@@ -2,3 +2,5 @@ node_modules/
 package-lock.json
 package.json
 convert.js
+*.backup.*
+Video/2026_Promo.mp4
