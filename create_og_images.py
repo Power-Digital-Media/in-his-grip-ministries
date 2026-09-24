@@ -98,59 +98,59 @@ def create_variant_1():
     col_x = 55
 
     # 1. Emblem
-    emb_target_h = 92
+    emb_target_h = 88
     emb_target_w = int(emblem.width * (emb_target_h / emblem.height))
     emb_scaled = emblem.resize((emb_target_w, emb_target_h), Image.Resampling.LANCZOS)
     
     # Soft drop shadow
     emb_shadow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    emb_shadow.paste(emb_scaled, (col_x, 46), emb_scaled)
+    emb_shadow.paste(emb_scaled, (col_x, 42), emb_scaled)
     shadow_mask = emb_shadow.split()[3].filter(ImageFilter.GaussianBlur(10))
     card.paste((0, 0, 0, 150), (0, 0), shadow_mask)
-    card.paste(emb_scaled, (col_x, 44), emb_scaled)
+    card.paste(emb_scaled, (col_x, 40), emb_scaled)
 
-    # 2. Title & Ministries (with crisp drop shadow)
+    # 2. Title & Ministries (with crisp drop shadow & comfortable vertical room)
     title_target_w = 390
     title_target_h = int(title.height * (title_target_w / title.width))
     title_scaled = title.resize((title_target_w, title_target_h), Image.Resampling.LANCZOS)
     
     t_shadow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    t_shadow.paste(title_scaled, (col_x, 150), title_scaled)
+    t_shadow.paste(title_scaled, (col_x, 154), title_scaled)
     t_shadow_mask = t_shadow.split()[3].filter(ImageFilter.GaussianBlur(8))
     card.paste((0, 0, 0, 180), (0, 0), t_shadow_mask)
-    card.paste(title_scaled, (col_x, 148), title_scaled)
+    card.paste(title_scaled, (col_x, 152), title_scaled)
 
     min_target_w = 340
     min_target_h = int(ministries.height * (min_target_w / ministries.width))
     min_scaled = ministries.resize((min_target_w, min_target_h), Image.Resampling.LANCZOS)
     
     m_shadow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    m_shadow.paste(min_scaled, (col_x, 214), min_scaled)
+    m_shadow.paste(min_scaled, (col_x, 224), min_scaled)
     m_shadow_mask = m_shadow.split()[3].filter(ImageFilter.GaussianBlur(6))
     card.paste((0, 0, 0, 180), (0, 0), m_shadow_mask)
-    card.paste(min_scaled, (col_x, 212), min_scaled)
+    card.paste(min_scaled, (col_x, 222), min_scaled)
 
     # 3. Gold divider line
     draw = ImageDraw.Draw(card)
-    draw.line([(col_x, 276), (col_x + 140, 276)], fill=(212, 162, 76, 255), width=3)
-    draw.line([(col_x + 140, 276), (col_x + 400, 276)], fill=(212, 162, 76, 90), width=1)
+    draw.line([(col_x, 286), (col_x + 140, 286)], fill=(212, 162, 76, 255), width=3)
+    draw.line([(col_x + 140, 286), (col_x + 400, 286)], fill=(212, 162, 76, 90), width=1)
 
     # 4. Mission Tagline
     tagline_1 = '"Sharing hope to the hurting & broken'
     tagline_2 = 'through the power of the gospel."'
-    draw.text((col_x, 300), tagline_1, fill=(254, 252, 249, 245), font=font_serif_md)
-    draw.text((col_x + 20, 337), tagline_2, fill=(232, 197, 118, 240), font=font_serif_it)
+    draw.text((col_x, 310), tagline_1, fill=(254, 252, 249, 245), font=font_serif_md)
+    draw.text((col_x + 20, 347), tagline_2, fill=(232, 197, 118, 240), font=font_serif_it)
 
     # 5. Badges
     badge_bg = (40, 34, 30, 230)
     # Founders badge
-    draw.rounded_rectangle([col_x, 415, col_x + 360, 465], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
-    draw.text((col_x + 16, 429), "Jeff & Connie Johnson", fill=(254, 252, 249, 255), font=font_sans_bold)
-    draw.text((col_x + 234, 431), "• Founders", fill=(212, 162, 76, 220), font=font_sans_med)
+    draw.rounded_rectangle([col_x, 422, col_x + 360, 472], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
+    draw.text((col_x + 16, 436), "Jeff & Connie Johnson", fill=(254, 252, 249, 255), font=font_sans_bold)
+    draw.text((col_x + 234, 438), "• Founders", fill=(212, 162, 76, 220), font=font_sans_med)
 
     # Website badge
-    draw.rounded_rectangle([col_x, 482, col_x + 220, 532], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
-    draw.text((col_x + 18, 496), "in-his-grip.com", fill=(232, 197, 118, 255), font=font_sans_bold)
+    draw.rounded_rectangle([col_x, 488, col_x + 220, 538], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
+    draw.text((col_x + 18, 502), "in-his-grip.com", fill=(232, 197, 118, 255), font=font_sans_bold)
 
     # Outer decorative luxury frame
     draw.rectangle([14, 14, W-15, H-15], outline=(212, 162, 76, 85), width=1)
