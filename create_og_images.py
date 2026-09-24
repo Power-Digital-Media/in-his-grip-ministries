@@ -8,8 +8,8 @@ out_dir = r'e:\AntiGravity\in-his-grip-ministries\images'
 
 photo_path = os.path.join(img_dir, '607191935_1809585089791912_7794484343929429084_n_result.webp')
 emblem_path = os.path.join(remotion_pub, 'emblem.png')
-title_path = os.path.join(r'e:\AntiGravity\in-his-grip-ministries', 'title_clean.png')
-min_path = os.path.join(r'e:\AntiGravity\in-his-grip-ministries', 'min_clean.png')
+title_path = os.path.join(r'e:\AntiGravity\in-his-grip-ministries', 'title_gold_3d.png')
+min_path = os.path.join(r'e:\AntiGravity\in-his-grip-ministries', 'min_gold_bright.png')
 
 photo = Image.open(photo_path).convert('RGBA')
 emblem = Image.open(emblem_path).convert('RGBA')
@@ -109,15 +109,25 @@ def create_variant_1():
     card.paste((0, 0, 0, 150), (0, 0), shadow_mask)
     card.paste(emb_scaled, (col_x, 44), emb_scaled)
 
-    # 2. Title & Ministries
+    # 2. Title & Ministries (with crisp drop shadow)
     title_target_w = 390
     title_target_h = int(title.height * (title_target_w / title.width))
     title_scaled = title.resize((title_target_w, title_target_h), Image.Resampling.LANCZOS)
+    
+    t_shadow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    t_shadow.paste(title_scaled, (col_x, 150), title_scaled)
+    t_shadow_mask = t_shadow.split()[3].filter(ImageFilter.GaussianBlur(8))
+    card.paste((0, 0, 0, 180), (0, 0), t_shadow_mask)
     card.paste(title_scaled, (col_x, 148), title_scaled)
 
     min_target_w = 340
     min_target_h = int(ministries.height * (min_target_w / ministries.width))
     min_scaled = ministries.resize((min_target_w, min_target_h), Image.Resampling.LANCZOS)
+    
+    m_shadow = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    m_shadow.paste(min_scaled, (col_x, 214), min_scaled)
+    m_shadow_mask = m_shadow.split()[3].filter(ImageFilter.GaussianBlur(6))
+    card.paste((0, 0, 0, 180), (0, 0), m_shadow_mask)
     card.paste(min_scaled, (col_x, 212), min_scaled)
 
     # 3. Gold divider line
@@ -219,11 +229,21 @@ def create_variant_2():
     title_target_w = 440
     title_target_h = int(title.height * (title_target_w / title.width))
     title_scaled = title.resize((title_target_w, title_target_h), Image.Resampling.LANCZOS)
+    
+    t_shadow2 = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    t_shadow2.paste(title_scaled, (col_x, 158), title_scaled)
+    t_shadow_mask2 = t_shadow2.split()[3].filter(ImageFilter.GaussianBlur(8))
+    card.paste((0, 0, 0, 180), (0, 0), t_shadow_mask2)
     card.paste(title_scaled, (col_x, 156), title_scaled)
 
     min_target_w = 380
     min_target_h = int(ministries.height * (min_target_w / ministries.width))
     min_scaled = ministries.resize((min_target_w, min_target_h), Image.Resampling.LANCZOS)
+    
+    m_shadow2 = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    m_shadow2.paste(min_scaled, (col_x, 224), min_scaled)
+    m_shadow_mask2 = m_shadow2.split()[3].filter(ImageFilter.GaussianBlur(6))
+    card.paste((0, 0, 0, 180), (0, 0), m_shadow_mask2)
     card.paste(min_scaled, (col_x, 222), min_scaled)
 
     draw.line([(col_x, 290), (col_x + 160, 290)], fill=(212, 162, 76, 255), width=3)
