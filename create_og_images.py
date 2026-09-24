@@ -61,9 +61,9 @@ def create_variant_1():
     aura = aura.filter(ImageFilter.GaussianBlur(55))
     card = Image.alpha_composite(card, aura)
 
-    # Photo Crop: Full headroom at top (y=0 to y=880) so their heads & faces are unclipped
-    # photo size is 1169 x 1169
-    crop_box = (40, 0, 1150, 900)
+    # Photo Crop: Full headroom at top (y=0 to y=875), crop excess background on left
+    # Connie is centered around x=480, Jeff around x=850
+    crop_box = (150, 0, 1169, 875)
     p_cropped = photo.crop(crop_box)
 
     # Scale to canvas height 630
@@ -71,19 +71,20 @@ def create_variant_1():
     target_w = int(p_cropped.width * (target_h / p_cropped.height))
     p_scaled = p_cropped.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-    # Feather left edge smoothly
+    # Shift photo right so Connie is well outside the gradient
     photo_layer = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    photo_x = W - target_w
+    photo_x = W - target_w + 10
 
+    # Narrow alpha mask for feathering only the leftmost edge (before Connie's hair)
     mask = Image.new('L', (target_w, target_h), 255)
     mask_draw = ImageDraw.Draw(mask)
-    fade_w = 340
+    fade_w = 130
     for x in range(fade_w):
-        alpha = int(255 * (x / fade_w)**1.55)
+        alpha = int(255 * (x / fade_w)**1.5)
         mask_draw.line([(x, 0), (x, target_h)], fill=alpha)
 
     # Subtle bottom fade
-    fade_h = 50
+    fade_h = 45
     for y in range(target_h - fade_h, target_h):
         alpha = int(255 * (1.0 - (y - (target_h - fade_h)) / fade_h))
         for x in range(target_w):
@@ -93,11 +94,11 @@ def create_variant_1():
     photo_layer.paste(p_scaled, (photo_x, 0), mask)
     card = Image.alpha_composite(card, photo_layer)
 
-    # Left Column Layout (center column around x = 275)
-    col_x = 65
+    # Left Column Layout
+    col_x = 55
 
     # 1. Emblem
-    emb_target_h = 95
+    emb_target_h = 92
     emb_target_w = int(emblem.width * (emb_target_h / emblem.height))
     emb_scaled = emblem.resize((emb_target_w, emb_target_h), Image.Resampling.LANCZOS)
     
@@ -109,37 +110,37 @@ def create_variant_1():
     card.paste(emb_scaled, (col_x, 44), emb_scaled)
 
     # 2. Title & Ministries
-    title_target_w = 405
+    title_target_w = 390
     title_target_h = int(title.height * (title_target_w / title.width))
     title_scaled = title.resize((title_target_w, title_target_h), Image.Resampling.LANCZOS)
-    card.paste(title_scaled, (col_x, 150), title_scaled)
+    card.paste(title_scaled, (col_x, 148), title_scaled)
 
-    min_target_w = 355
+    min_target_w = 340
     min_target_h = int(ministries.height * (min_target_w / ministries.width))
     min_scaled = ministries.resize((min_target_w, min_target_h), Image.Resampling.LANCZOS)
-    card.paste(min_scaled, (col_x, 215), min_scaled)
+    card.paste(min_scaled, (col_x, 212), min_scaled)
 
     # 3. Gold divider line
     draw = ImageDraw.Draw(card)
-    draw.line([(col_x, 280), (col_x + 150, 280)], fill=(212, 162, 76, 255), width=3)
-    draw.line([(col_x + 150, 280), (col_x + 440, 280)], fill=(212, 162, 76, 90), width=1)
+    draw.line([(col_x, 276), (col_x + 140, 276)], fill=(212, 162, 76, 255), width=3)
+    draw.line([(col_x + 140, 276), (col_x + 400, 276)], fill=(212, 162, 76, 90), width=1)
 
     # 4. Mission Tagline
     tagline_1 = '"Sharing hope to the hurting & broken'
     tagline_2 = 'through the power of the gospel."'
-    draw.text((col_x, 305), tagline_1, fill=(254, 252, 249, 245), font=font_serif_md)
-    draw.text((col_x + 20, 342), tagline_2, fill=(232, 197, 118, 240), font=font_serif_it)
+    draw.text((col_x, 300), tagline_1, fill=(254, 252, 249, 245), font=font_serif_md)
+    draw.text((col_x + 20, 337), tagline_2, fill=(232, 197, 118, 240), font=font_serif_it)
 
     # 5. Badges
     badge_bg = (40, 34, 30, 230)
     # Founders badge
-    draw.rounded_rectangle([col_x, 420, col_x + 365, 470], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
-    draw.text((col_x + 16, 434), "Jeff & Connie Johnson", fill=(254, 252, 249, 255), font=font_sans_bold)
-    draw.text((col_x + 236, 436), "• Founders", fill=(212, 162, 76, 220), font=font_sans_med)
+    draw.rounded_rectangle([col_x, 415, col_x + 360, 465], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
+    draw.text((col_x + 16, 429), "Jeff & Connie Johnson", fill=(254, 252, 249, 255), font=font_sans_bold)
+    draw.text((col_x + 234, 431), "• Founders", fill=(212, 162, 76, 220), font=font_sans_med)
 
     # Website badge
-    draw.rounded_rectangle([col_x, 488, col_x + 225, 538], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
-    draw.text((col_x + 18, 502), "in-his-grip.com", fill=(232, 197, 118, 255), font=font_sans_bold)
+    draw.rounded_rectangle([col_x, 482, col_x + 220, 532], radius=10, fill=badge_bg, outline=(212, 162, 76, 140), width=1)
+    draw.text((col_x + 18, 496), "in-his-grip.com", fill=(232, 197, 118, 255), font=font_sans_bold)
 
     # Outer decorative luxury frame
     draw.rectangle([14, 14, W-15, H-15], outline=(212, 162, 76, 85), width=1)
