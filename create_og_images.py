@@ -61,8 +61,9 @@ def create_variant_1():
     aura = aura.filter(ImageFilter.GaussianBlur(55))
     card = Image.alpha_composite(card, aura)
 
-    # Photo Crop: Full headroom at top (y=0 to y=875), crop excess background on left
-    crop_box = (150, 0, 1169, 875)
+    # Photo Crop: Full headroom at top (y=0 to y=875)
+    # Centered between right border and left gradient
+    crop_box = (90, 0, 1169, 875)
     p_cropped = photo.crop(crop_box)
 
     # Scale to canvas height 630
@@ -70,14 +71,14 @@ def create_variant_1():
     target_w = int(p_cropped.width * (target_h / p_cropped.height))
     p_scaled = p_cropped.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-    # Shift photo right so Connie is well outside the gradient
+    # Shift photo right so Connie and Jeff are centered between the right border and the gradient
     photo_layer = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    photo_x = W - target_w + 10
+    photo_x = W - target_w + 68
 
-    # Narrow alpha mask for feathering only the leftmost edge (before Connie's hair)
+    # Smooth alpha mask for feathering the leftmost edge
     mask = Image.new('L', (target_w, target_h), 255)
     mask_draw = ImageDraw.Draw(mask)
-    fade_w = 130
+    fade_w = 120
     for x in range(fade_w):
         alpha = int(255 * (x / fade_w)**1.5)
         mask_draw.line([(x, 0), (x, target_h)], fill=alpha)
